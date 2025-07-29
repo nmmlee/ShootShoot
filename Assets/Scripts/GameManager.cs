@@ -50,9 +50,13 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private Sprite redBulletSprite;
 
+    [SerializeField]
+    private Text totalGoldText;
+
     private float time;
     private int bulletCount;
-    private int totalGold;
+    private int startGold = 50;
+    private int currentGold;
 
     // 탄환 순환 시스템
     private List<BulletType> bulletQueue = new List<BulletType>();
@@ -61,13 +65,25 @@ public class GameManager : MonoBehaviour
 
     private Enemy currentEnemy;
 
+    public Item[] items;
+
+    [SerializeField]
+    private bool isOddDamageUp;
+    [SerializeField]
+    private bool isEvenDamageUp;
+    [SerializeField]
+    private bool isAllDamageUp;
+
     void Start()
     {
         shootBtn.interactable = false;
+        currentGold = startGold;
         InitializeBulletQueue();
         InitializeBulletSprites();
         UpdateBulletImages();
         SpawnNewEnemy();
+
+        UpdateGoldUI();
     }
 
     // 탄환 큐 초기화
@@ -103,9 +119,8 @@ public class GameManager : MonoBehaviour
     // 골드 추가
     public void AddGold(int amount)
     {
-        totalGold += amount;
-        Debug.Log($"골드를 {amount} 획득했습니다! 총 골드: {totalGold}");
-        // 여기에 골드 UI 업데이트 로직을 추가할 수 있습니다
+        currentGold += amount;
+        UpdateGoldUI();
     }
 
     // 새로운 Enemy 생성
@@ -188,8 +203,9 @@ public class GameManager : MonoBehaviour
                 bulletCount = 4;
             else if (sliderImage.fillAmount < 1)
                 bulletCount = 5;
+
+            shootBtn.interactable = true;
         }
-        shootBtn.interactable = true;
         shootBtnText.text = $"{bulletCount}발 발사";
     }
 
@@ -199,9 +215,38 @@ public class GameManager : MonoBehaviour
         StartCoroutine(ShootBullets());
     }
 
+    public void UseItem()
+    {
+        for(int i = 0; i < items.Length; i++)
+        {
+            if (items[i].isActive)
+            {
+                items[i].ApplyEffect();
+                Debug.Log($"{i}번째 활성화됨");
+
+                currentGold -= items[i].cost;
+            }
+        }
+        UpdateGoldUI();
+    }
+
+    public void SetItem()
+    {
+        for (int i = 0; i < items.Length; i++)
+        {
+            if (items[i].isActive)
+            {
+                items[i].isActive = !items[i].isActive;
+                items[i].ChangeSprite();
+            }
+        }
+    }
+
     private IEnumerator ShootBullets()
     {
         Enemy enemy = currentEnemy;
+        // 아이템 효과 적용
+        UseItem();
 
         // 발사할 탄환 개수만큼 반복
         for (int i = 0; i < bulletCount; i++)
@@ -266,13 +311,17 @@ public class GameManager : MonoBehaviour
             // 탄환 효과 처리
             // ProcessBulletEffect(currentBullet);
         }
+
         // 모든 탄환 발사 완료 후 라운드 종료 처리
+
         if (enemy != null)
         {
             enemy.OnRoundEnd(); // 라운드 후 회복 처리
             enemy.attackRemainTurn--;
         }
 
+        // 다시 아이템 사용하지 않는 상태로 돌려놓기
+        SetItem();
         shootBtn.interactable = true;
     }
 
@@ -302,6 +351,14 @@ public class GameManager : MonoBehaviour
     private int CalculateBulletDamage(int index)
     {
         int baseDamage = 1;
+
+        if (isOddDamageUp && index % 2 != 0)
+            baseDamage += 1;
+        if (isEvenDamageUp && index % 2 == 0)
+            baseDamage += 1;
+        if (isAllDamageUp)
+            baseDamage += 1;
+
         return baseDamage; // + (index % 2 == 0 ? 1 : 0);
     }
 
@@ -335,4 +392,26 @@ public class GameManager : MonoBehaviour
         }
         Debug.Log(queueStatus);
     }
+
+    public void IncreaseOddDamageUp()
+    {
+        isOddDamageUp = true;
+    }
+
+    public void IncreaseEvenDamageUp()
+    {
+        isEvenDamageUp = true;
+    }
+
+    public void IncreaseAllDamageUp()
+    {
+        isAllDamageUp = true;
+    }
+
+    void UpdateGoldUI()
+    {
+        totalGoldText.text = $"보유골드 : {currentGold}";
+    }
+
+
 }
