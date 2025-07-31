@@ -131,7 +131,7 @@ GameObject:
   - component: {fileID: 26121443}
   - component: {fileID: 26121442}
   m_Layer: 5
-  m_Name: ExplainText
+  m_Name: GuildName
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -443,7 +443,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 158132296}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2107105786}
+        m_TargetAssemblyTypeName: GuildManager, Assembly-CSharp
+        m_MethodName: GuildRegister
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &158132296
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4762,6 +4774,58 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2068200331}
   m_CullTransparentMesh: 1
+--- !u!1 &2107105784
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2107105785}
+  - component: {fileID: 2107105786}
+  m_Layer: 0
+  m_Name: GuildManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2107105785
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2107105784}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1714.7754, y: 128.48468, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2107105786
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2107105784}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c099b68de02fa2d45967d5762eeffc45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  guildNameText: {fileID: 26121442}
+  guildRegisterProbText: {fileID: 891426121}
+  guildRegisterCostText: {fileID: 560210383}
+  registerText: {fileID: 1688282605}
+  registerButton: {fileID: 158132295}
+  guildLevel: 0
+  maxGuildLevel: 0
+  gameManager: {fileID: 828604492}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -4770,3 +4834,4 @@ SceneRoots:
   - {fileID: 346824634}
   - {fileID: 828604491}
   - {fileID: 1774372415}
+  - {fileID: 2107105785}

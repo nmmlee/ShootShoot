@@ -116,10 +116,28 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public int GetGold()
+    {
+        return currentGold;
+    }
+
     // 골드 추가
     public void AddGold(int amount)
     {
         currentGold += amount;
+        UpdateGoldUI();
+    }
+
+    public void MinusGold(int amount)
+    {
+        currentGold -= amount;
+
+        if(currentGold <= 0)
+        {
+            // TODO : GameOver 코드 넣어두기
+            Debug.Log("게임 오버");
+            // return;
+        }
         UpdateGoldUI();
     }
 
@@ -245,6 +263,7 @@ public class GameManager : MonoBehaviour
     private IEnumerator ShootBullets()
     {
         Enemy enemy = currentEnemy;
+        ReleaseBuff();
         // 아이템 효과 적용
         UseItem();
 
@@ -291,10 +310,12 @@ public class GameManager : MonoBehaviour
                 {
                     // 정확한 데미지로 죽였을 때 골드 2배
                     Debug.Log("[GameManager] : 딱데미지!");
+                    AddGold(enemy.goldReward * 2);
                 }
 
                 if (enemy == null || isEnemyRespawning)
                 {
+                    AddGold(enemy.goldReward);
                     Debug.Log("[GameManager] : 적이 죽었습니다! 공격 중단");
                     break; // 루프 종료
                 }
@@ -406,6 +427,14 @@ public class GameManager : MonoBehaviour
     public void IncreaseAllDamageUp()
     {
         isAllDamageUp = true;
+    }
+
+    // 턴이 끝나면 모든 버프 해제
+    public void ReleaseBuff()
+    {
+        isOddDamageUp = false;
+        isEvenDamageUp = false;
+        isAllDamageUp = false;
     }
 
     void UpdateGoldUI()
